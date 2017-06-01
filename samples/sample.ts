@@ -5,7 +5,7 @@ import {
   field, required, indexed, unique,
   statics, virtuals, methods,
   schema
-} from './';
+} from '../src';
 
 interface Service {
   _id: Mongoose.Schema.Types.ObjectId;
