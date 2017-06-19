@@ -1,6 +1,6 @@
 export interface MongooseMeta {
   schemaObj: any;
-  options: [[string, any]];
+  options: any;
   statics: [[string, any]]; // used for static properties & functions
   // queries: [[string, Function]]; // use statics instead of query
   methods: [[string, Function]];  // used for instance methods
@@ -15,7 +15,7 @@ export function getMetadata(target: MongooseClass): MongooseMeta {
   if (!target.__mongoose_meta__) {
     target.__mongoose_meta__ = <MongooseMeta>{
       schemaObj: {},
-      options: [],
+      options: {},
       statics: [],
       // queries: [],
       methods: [],
