@@ -8,7 +8,8 @@ import { getMetadata, MongooseMeta } from './meta';
  * @param {boolean} loadClass indicating if load setters + getters, static methods, and instance methods from the target class to schema
  */
 export function buildSchema(target: Function, loadClass: boolean = true) {
-  let schema: Mongoose.Schema = new Mongoose.Schema(getMetadata(target.prototype).schemaObj);
+  let meta = getMetadata(target.prototype);
+  let schema: Mongoose.Schema = new Mongoose.Schema(meta.schemaObj, meta.options);
 
   // loadClass to map setters + getters, static methods, and instance methods to schema virtuals, statics, and methods
   if (loadClass) {
@@ -47,11 +48,6 @@ function setSchemaFromMeta(target: Function, schema: Mongoose.Schema) {
     if (typeof fn.value === 'object') {
       schema.virtual(name, fn.value);
     }
-  });
-
-  // set schema level opts
-  meta.options.forEach(([option, value]: [string, any]) => {
-    schema.set(option, value);
   });
 }
 

@@ -13,9 +13,7 @@ export function schema(options?: any): any {
   if (options && typeof options !== 'function') {
     return (target: Function) => {
       const meta = getMetadata(target.prototype);
-      Object.keys(options).forEach((key) => {
-        meta.options.push([key, options[key]]);
-      });
+      meta.options = options;
     };
   }
 }
