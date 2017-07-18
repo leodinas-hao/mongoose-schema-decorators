@@ -11,8 +11,9 @@ export interface MongooseClass extends Object {
   __mongoose_meta__: MongooseMeta;
 }
 
-export function getMetadata(target: MongooseClass): MongooseMeta {
-  if (!target.__mongoose_meta__) {
+export function getMetadata(target: any): MongooseMeta {
+  if (!target.hasOwnProperty('__mongoose_meta__')) {
+    // console.error(`Defining MongooseMeta for ${target.name}`);
     target.__mongoose_meta__ = <MongooseMeta>{
       schemaObj: {},
       options: {},
