@@ -12,7 +12,7 @@ export function schema(target: Function): void;
 export function schema(options?: any): any {
   if (options && typeof options !== 'function') {
     return (target: Function) => {
-      const meta = getMetadata(target.prototype);
+      const meta = getMetadata(target);
       meta.options = options;
     };
   }
@@ -46,7 +46,7 @@ export const unique = makeFieldDecorator({ unique: true });
  */
 export function statics(target: any, propertyKey: string): void {
   if (target[propertyKey]) {
-    getMetadata(target.prototype).statics.push([propertyKey, target[propertyKey]]);
+    getMetadata(target.constructor).statics.push([propertyKey, target[propertyKey]]);
   }
 }
 
@@ -58,7 +58,7 @@ export function statics(target: any, propertyKey: string): void {
  */
 export function methods(target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
   if (typeof descriptor.value === 'function') {
-    getMetadata(target).methods.push([propertyKey, descriptor.value]);
+    getMetadata(target.constructor).methods.push([propertyKey, descriptor.value]);
   }
 }
 
@@ -80,12 +80,12 @@ export function virtuals(options?: any): PropertyDecorator;
 export function virtuals(target: any, propertyKey: string, descriptor?: PropertyDescriptor): void;
 export function virtuals(target: any, propertyKey?: string, descriptor?: PropertyDescriptor): PropertyDecorator | void {
   if (descriptor && (descriptor.get || descriptor.set)) {
-    getMetadata(target).virtuals.push([propertyKey, descriptor]);
+    getMetadata(target.constructor).virtuals.push([propertyKey, descriptor]);
   } else {
     // for virtual reference
     let options = target;
     return (target: any, propertyKey: string): void => {
-      getMetadata(target).virtuals.push([propertyKey, { value: options }]);
+      getMetadata(target.constructor).virtuals.push([propertyKey, { value: options }]);
     };
   }
 }
@@ -150,7 +150,7 @@ function mergeOptions(defaults: any, options?: any): Mongoose.SchemaTypeOpts<any
  * @param options 
  */
 function setFieldOptions(target: any, propertyKey: string, options?: any): void {
-  let schemaObj = getMetadata(target).schemaObj;
+  let schemaObj = getMetadata(target.constructor).schemaObj;
   let opts = schemaObj[propertyKey];
   if (!opts) {
     // get default options with type information based on the decorated property

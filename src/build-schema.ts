@@ -4,11 +4,11 @@ import { getMetadata, MongooseMeta } from './meta';
 
 /**
  * Gets the mongoose schema for a decorated class
- * @param {Function} target 
+ * @param {Function} target a class decorated by @schema 
  * @param {boolean} loadClass indicating if load setters + getters, static methods, and instance methods from the target class to schema
  */
 export function buildSchema(target: Function, loadClass: boolean = true) {
-  let meta = getMetadata(target.prototype);
+  let meta = getMetadata(target);
   let schema: Mongoose.Schema = new Mongoose.Schema(meta.schemaObj, meta.options);
 
   // loadClass to map setters + getters, static methods, and instance methods to schema virtuals, statics, and methods
@@ -23,7 +23,7 @@ export function buildSchema(target: Function, loadClass: boolean = true) {
 }
 
 function setSchemaFromMeta(target: Function, schema: Mongoose.Schema) {
-  const meta = getMetadata(target.prototype);
+  const meta = getMetadata(target);
   // set statics
   meta.statics.forEach(([name, fn]: [string, any]) => {
     schema.statics[name] = fn;
@@ -57,7 +57,7 @@ function setSchemaFromClass(target: Function, schema: Mongoose.Schema) {
 
   // add static properties as loadClass doesn't cover such
   Object.getOwnPropertyNames(target).forEach(function (name) {
-    if (name.match(/^(length|name|prototype)$/)) {
+    if (name.match(/^(length|name|prototype|__mongoose_meta__)$/)) {
       return;
     }
     if (!schema.statics[name]) {
