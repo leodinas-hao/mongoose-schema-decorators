@@ -1,15 +1,17 @@
 {
-  "name": "mongoose-decorators",
-  "version": "1.0.0-alpha1",
-  "description": "Define your mongoose models/schemas easily with Typescript decorators",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "name": "mongoose-schema-decorators",
+  "version": "1.0.0",
+  "description": "Define your mongoose models/schemas easily with @decorators",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
-    "prepublish": "tsc"
+    "clean": "rimraf lib",
+    "compile": "npm run clean && tsc",
+    "prepublishOnly": "npm run compile"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leodinas-hao/mongoose-decorators.git"
+    "url": "git+https://github.com/leodinas-hao/mongoose-schema-decorators.git"
   },
   "keywords": [
     "nodejs",
@@ -20,17 +22,17 @@
   "author": "Leodinas Hao",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/leodinas-hao/mongoose-decorators/issues"
+    "url": "https://github.com/leodinas-hao/mongoose-schema-decorators/issues"
   },
-  "homepage": "https://github.com/leodinas-hao/mongoose-decorators#readme",
+  "homepage": "https://github.com/leodinas-hao/mongoose-schema-decorators#readme",
   "dependencies": {
-    "mongoose": "^4.10.0",
-    "reflect-metadata": "^0.1.10"
+    "mongoose": "4.11.13",
+    "reflect-metadata": "0.1.10"
   },
   "devDependencies": {
-    "@types/mongoose": "^4.7.12",
-    "@types/node": "^7.0.18",
-    "ts-node": "^3.0.4",
-    "typescript": "^2.3.2"
+    "@types/mongoose": "4.7.23",
+    "@types/node": "8.0.31",
+    "rimraf": "2.6.2",
+    "typescript": "2.5.3"
   }
 }

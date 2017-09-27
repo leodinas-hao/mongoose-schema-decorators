@@ -1,5 +1,10 @@
-# mongoose-decorators
-Define your mongoose models/schemas easily with Typescript decorators
+# mongoose-schema-decorators
+Define your mongoose models/schemas easily with @decorators
+
+## Installation
+```
+npm install mongoose-schema-decorators --save
+```
 
 ## API
 #### Functions
