@@ -1,4 +1,7 @@
 # mongoose-schema-decorators
+
+[![NPM version][npm-image]][npm-url]
+
 Define your mongoose models/schemas easily with @decorators
 
 ## Installation
@@ -77,4 +80,7 @@ const CustomerSchema: Mongoose.Schema = buildSchema(CustomerClass);
 
 ## License
 MIT
+
+[npm-url]: https://www.npmjs.com/package/mongoose-schema-decorators
+[npm-image]: https://img.shields.io/npm/v/mongoose-schema-decorators.svg?style=flat-square
 
