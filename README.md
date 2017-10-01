@@ -1,6 +1,7 @@
 # mongoose-schema-decorators
 
 [![NPM version][npm-image]][npm-url]
+[![Downloads][download-badge]][npm-url]
 
 Define your mongoose models/schemas easily with @decorators
 
@@ -26,7 +27,7 @@ npm install mongoose-schema-decorators --save
 * **@virtuals(options?: any)** - decorates a getter/setter/property (virtual reference to build relationship between collections) as schema virtuals
 
 ## Sample usage
-```
+```js
 interface Customer {
   _id: number;
   name: string;
@@ -83,4 +84,5 @@ MIT
 
 [npm-url]: https://www.npmjs.com/package/mongoose-schema-decorators
 [npm-image]: https://img.shields.io/npm/v/mongoose-schema-decorators.svg?style=flat-square
+[download-badge]: https://img.shields.io/npm/dm/mongoose-schema-decorators.svg?style=flat-square 
 

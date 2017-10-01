@@ -1,6 +1,6 @@
 {
   "name": "mongoose-schema-decorators",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Define your mongoose models/schemas easily with @decorators",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
