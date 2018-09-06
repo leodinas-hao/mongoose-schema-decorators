@@ -2,9 +2,9 @@ import * as Mongoose from 'mongoose';
 
 import {
   buildSchema,
-  field, required, indexed, unique,
-  statics, virtuals, methods,
-  schema
+  field, indexed, methods, required,
+  schema, statics, unique,
+  virtuals,
 } from '../src';
 
 interface Service {
@@ -18,16 +18,16 @@ type ServiceDocument = Service & Mongoose.Document;
 
 class ServiceClass extends Mongoose.Model implements Service {
   @field(Mongoose.Schema.Types.ObjectId)
-  _id: Mongoose.Schema.Types.ObjectId
+  public _id: Mongoose.Schema.Types.ObjectId;
 
   @field
-  product: string;
+  public product: string;
 
   @field
-  description: string;
+  public description: string;
 
   @field({ ref: 'Customer' })
-  customer: number;
+  public customer: number;
 }
 
 const ServiceSchema: Mongoose.Schema = buildSchema(ServiceClass);
@@ -46,34 +46,35 @@ type CustomerDocument = Customer & Mongoose.Document;
 @schema({
   toJSON: {
     getters: true,
-    virtuals: true
-  }
+    virtuals: true,
+  },
 })
 class CustomerClass extends Mongoose.Model implements Customer {
+
+  public static Search(term: string): Promise<CustomerDocument[]> {
+    const reg = new RegExp(term, 'i');
+    return this.find({ name: reg }).exec();
+  }
+
   @indexed
   @unique
-  _id: number;
+  public _id: number;
 
   @field
   @indexed
   @unique
-  name: string;
+  public name: string;
 
   @field(Date)
-  createdDate: Date;
+  public createdDate: Date;
 
   @virtuals({
     ref: 'Service',
     localField: '_id',
     foreignField: 'customer',
-    justOne: false
+    justOne: false,
   })
-  services: Service[];
-
-  static Search(term: string): Promise<CustomerDocument[]> {
-    let reg = new RegExp(term, 'i');
-    return this.find({ name: reg }).exec();
-  }
+  public services: Service[];
 
   get myGetter(): string {
     return 'sample getter';
