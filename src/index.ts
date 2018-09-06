@@ -3,6 +3,7 @@ export {
   schema,
   statics,
   virtuals,
-  methods
+  methods,
 } from './decorators';
+
 export { buildSchema } from './build-schema';

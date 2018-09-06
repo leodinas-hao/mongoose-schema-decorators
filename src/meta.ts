@@ -14,14 +14,14 @@ export interface MongooseClass extends Object {
 export function getMetadata(target: any): MongooseMeta {
   if (!target.hasOwnProperty('__mongoose_meta__')) {
     // console.error(`Defining MongooseMeta for ${target.name}`);
-    target.__mongoose_meta__ = <MongooseMeta>{
+    target.__mongoose_meta__ = {
       schemaObj: {},
       options: {},
       statics: [],
       // queries: [],
       methods: [],
-      virtuals: []
+      virtuals: [],
     };
   }
-  return <MongooseMeta>target.__mongoose_meta__;
+  return target.__mongoose_meta__ as MongooseMeta;
 }

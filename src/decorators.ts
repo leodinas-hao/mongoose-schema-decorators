@@ -1,5 +1,5 @@
-import "reflect-metadata";
 import * as Mongoose from 'mongoose';
+import 'reflect-metadata';
 
 import { getMetadata } from './meta';
 
@@ -41,8 +41,8 @@ export const unique = makeFieldDecorator({ unique: true });
 
 /**
  * statics decorators for adding static functions/properties to the schema
- * @param target 
- * @param propertyKey 
+ * @param target
+ * @param propertyKey
  */
 export function statics(target: any, propertyKey: string): void {
   if (target[propertyKey]) {
@@ -52,9 +52,9 @@ export function statics(target: any, propertyKey: string): void {
 
 /**
  * methods decorators for adding instance methods to the schema
- * @param target 
- * @param propertyKey 
- * @param descriptor 
+ * @param target
+ * @param propertyKey
+ * @param descriptor
  */
 export function methods(target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
   if (typeof descriptor.value === 'function') {
@@ -74,7 +74,7 @@ export function methods(target: any, propertyKey: string, descriptor: PropertyDe
  *   // an array. `justOne` is false by default.
  *   justOne: false
  * })
- * @param options 
+ * @param options
  */
 export function virtuals(options?: any): PropertyDecorator;
 export function virtuals(target: any, propertyKey: string, descriptor?: PropertyDescriptor): void;
@@ -83,7 +83,8 @@ export function virtuals(target: any, propertyKey?: string, descriptor?: Propert
     getMetadata(target.constructor).virtuals.push([propertyKey, descriptor]);
   } else {
     // for virtual reference
-    let options = target;
+    const options = target;
+    // tslint:disable-next-line:no-shadowed-variable
     return (target: any, propertyKey: string): void => {
       getMetadata(target.constructor).virtuals.push([propertyKey, { value: options }]);
     };
@@ -92,24 +93,24 @@ export function virtuals(target: any, propertyKey?: string, descriptor?: Propert
 
 /**
  * produces field decorators
- * 
+ *
  * Notes/Limits:
  * Only primitive types `Boolean`, `Number`, `String` can be set implicitly, otherwise it will be set to `Mongoose.Schema.Types.Mixed`
  * For decorated `Array` property, make sure provide type information, otherwise, it will be given type as `[Mongoose.Schema.Types.Mixed]`
- * 
- * To set mongoose array reference, please make sure provide options as following format: 
+ *
+ * To set mongoose array reference, please make sure provide options as following format:
  * i.e. [{type: Number, ref: 'model'}]
- * 
+ *
  * @required
  * @field([String])
  * the above decorators will make options as: [{type: String, required: true}]
- * 
- * if required options are like: {type: [String], required: true}, consider followings: 
+ *
+ * if required options are like: {type: [String], required: true}, consider followings:
  * @required
  * @field({type: [String]})
- * 
- * 
- * @param defaults 
+ *
+ *
+ * @param defaults
  */
 function makeFieldDecorator(defaults?: any) {
   function fieldDecorator(options?: Mongoose.SchemaTypeOpts<any>): PropertyDecorator;
@@ -117,8 +118,8 @@ function makeFieldDecorator(defaults?: any) {
   function fieldDecorator(options?: any, propertyKey?: string): PropertyDecorator | void {
     if (propertyKey) {
       setFieldOptions(options, propertyKey, mergeOptions(defaults));
-    }
-    else {
+    } else {
+      // tslint:disable-next-line:no-shadowed-variable
       return (target: any, propertyKey: string): void => {
         setFieldOptions(target, propertyKey, mergeOptions(defaults, options));
       };
@@ -129,8 +130,8 @@ function makeFieldDecorator(defaults?: any) {
 
 /**
  * helper method to merge schema field options
- * @param defaults 
- * @param options 
+ * @param defaults
+ * @param options
  */
 function mergeOptions(defaults: any, options?: any): Mongoose.SchemaTypeOpts<any> {
   let opts = Array.isArray(options) ? options[0] : options;
@@ -145,12 +146,12 @@ function mergeOptions(defaults: any, options?: any): Mongoose.SchemaTypeOpts<any
 /**
  * Sets schema field options
  * if type information not provided, gathers type information via `reflect-metadata` from the decorated property
- * @param target 
- * @param propertyKey 
- * @param options 
+ * @param target
+ * @param propertyKey
+ * @param options
  */
 function setFieldOptions(target: any, propertyKey: string, options?: any): void {
-  let schemaObj = getMetadata(target.constructor).schemaObj;
+  const schemaObj = getMetadata(target.constructor).schemaObj;
   let opts = schemaObj[propertyKey];
   if (!opts) {
     // get default options with type information based on the decorated property
@@ -187,10 +188,10 @@ function normalizeType(type: any): any {
   if (type.prototype instanceof Mongoose.SchemaType) {
     return type;
   }
-  if (type == Mongoose.Types.ObjectId) {
+  if (type === Mongoose.Types.ObjectId) {
     return Mongoose.Schema.Types.ObjectId;
   }
-  if (type == Array) {
+  if (type === Array) {
     return [Mongoose.Schema.Types.Mixed];
   }
   // default type
