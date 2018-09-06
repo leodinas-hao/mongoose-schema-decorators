@@ -1,6 +1,6 @@
 {
   "name": "mongoose-schema-decorators",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Define your mongoose models/schemas easily with @decorators",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -29,19 +29,19 @@
   },
   "homepage": "https://github.com/leodinas-hao/mongoose-schema-decorators#readme",
   "dependencies": {
-    "mongoose": "5.2.13",
-    "reflect-metadata": "0.1.12"
+    "mongoose": "^5.2.13",
+    "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
-    "@types/chai": "4.1.4",
-    "@types/mocha": "5.2.5",
-    "@types/mongoose": "5.2.10",
-    "@types/node": "10.9.4",
-    "chai": "4.1.2",
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/mongoose": "^5.2.10",
+    "@types/node": "^10.9.4",
+    "chai": "^4.1.2",
     "mocha": "^5.2.0",
-    "mocha-typescript": "1.1.17",
-    "rimraf": "2.6.2",
+    "mocha-typescript": "^1.1.17",
+    "rimraf": "^2.6.2",
     "tslint": "^5.11.0",
-    "typescript": "3.0.3"
+    "typescript": "^3.0.3"
   }
 }
