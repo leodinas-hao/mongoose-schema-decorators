@@ -40,6 +40,15 @@ class Service {
   public customer: number;
 }
 
+class NestClass {
+  @field
+  public name: string;
+  @field
+  public sub: {
+    prop1: string;
+  };
+}
+
 @suite('Tester')
 class Tester {
   @test('should build Customer schema')
@@ -58,6 +67,20 @@ class Tester {
     const serviceSchema = buildSchema(Service);
     // console.log(serviceSchema);
     assert.equal(4, this.pathCount(serviceSchema));
+  }
+
+  @test('nested schema')
+  public nestedSchema() {
+    const s = new Mongoose.Schema({
+      name: String,
+      sub: {
+        prop1: String,
+      },
+    });
+    console.log(s);
+
+    const ss = buildSchema(NestClass);
+    console.log(ss);
   }
 
   private pathCount(s: Mongoose.Schema): number {
