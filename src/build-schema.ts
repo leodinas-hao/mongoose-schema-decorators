@@ -1,54 +1,61 @@
 import * as Mongoose from 'mongoose';
 
-import { getMetadata, MongooseMeta } from './meta';
+import { getMetadata } from './meta';
 
 /**
  * Gets the mongoose schema for a decorated class
  * @param {Function} target a class decorated by @schema
  * @param {boolean} loadClass indicating if load setters + getters, static methods, and instance methods from the target class to schema
+ * @returns {Mongoose.Schema}
  */
-export function buildSchema(target: Function, loadClass = true) {
+export function buildSchema(target: Function, loadClass = true): Mongoose.Schema {
   const meta = getMetadata(target);
-  const schema: Mongoose.Schema = new Mongoose.Schema(meta.schemaObj, meta.options);
+  // const schema: Mongoose.Schema = new Mongoose.Schema(meta.schemaObj, meta.options);
+  const schema: Mongoose.Schema = new Mongoose.Schema({}, meta.options);
+
+  // set schema based on meta inputs
+  setSchemaFromMeta(target, schema);
 
   // loadClass to map setters + getters, static methods, and instance methods to schema virtuals, statics, and methods
   if (loadClass) {
     setSchemaFromClass(target, schema);
   }
 
-  // set schema based on meta inputs
-  setSchemaFromMeta(target, schema);
-
   return schema;
 }
 
 function setSchemaFromMeta(target: Function, schema: Mongoose.Schema) {
   const meta = getMetadata(target);
+
+  // add paths
+  schema.add(meta.schemaObj);
+
   // set statics
-  meta.statics.forEach(([name, fn]: [string, any]) => {
-    schema.statics[name] = fn;
-  });
+  for (const name in meta.statics) {
+    schema.statics[name] = meta.statics[name];
+  }
 
   // set instance methods
-  meta.methods.forEach(([name, fn]: [string, Function]) => {
-    schema.method(name, fn);
-  });
+  for (const name in meta.methods) {
+    schema.method(name, meta.methods[name]);
+  }
 
   // set virtuals
-  meta.virtuals.forEach(([name, fn]: [string, PropertyDescriptor]) => {
+  for (const name in meta.virtuals) {
+    const prop = meta.virtuals[name];
     // getter
-    if (typeof fn.get === 'function') {
-      schema.virtual(name).get(fn.get);
+    if (typeof prop.get === 'function') {
+      schema.virtual(name).get(prop.get);
     }
     // setter
-    if (typeof fn.set === 'function') {
-      schema.virtual(name).set(fn.set);
+    if (typeof prop.set === 'function') {
+      schema.virtual(name).set(prop.set);
     }
     // virtual refs
-    if (typeof fn.value === 'object') {
-      schema.virtual(name, fn.value);
+    if (typeof prop.value === 'object') {
+      schema.virtual(name, prop.value);
     }
-  });
+  }
 }
 
 function setSchemaFromClass(target: Function, schema: Mongoose.Schema) {

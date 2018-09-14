@@ -1,13 +1,14 @@
 import * as Mongoose from 'mongoose';
 import 'reflect-metadata';
 
-import { getMetadata } from './meta';
+import { buildSchema } from './build-schema';
+import { getMetadata, hasMetadata } from './meta';
 
 /**
  * Decorates a class to be a mongoose schema/model
- * @param {Mongoose.SchemaTypeOpts<any>} options for schema
+ * @param {Mongoose.SchemaOptions} options for schema
  */
-export function schema(options?: Mongoose.SchemaTypeOpts<any>): ClassDecorator;
+export function schema(options?: Mongoose.SchemaOptions): ClassDecorator;
 export function schema(target: Function): void;
 export function schema(options?: any): any {
   if (options && typeof options !== 'function') {
@@ -46,7 +47,7 @@ export const unique = makeFieldDecorator({ unique: true });
  */
 export function statics(target: any, propertyKey: string): void {
   if (target[propertyKey]) {
-    getMetadata(target.constructor).statics.push([propertyKey, target[propertyKey]]);
+    getMetadata(target.constructor).statics[propertyKey] = target[propertyKey];
   }
 }
 
@@ -58,7 +59,7 @@ export function statics(target: any, propertyKey: string): void {
  */
 export function methods(target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
   if (typeof descriptor.value === 'function') {
-    getMetadata(target.constructor).methods.push([propertyKey, descriptor.value]);
+    getMetadata(target.constructor).methods[propertyKey] = descriptor.value;
   }
 }
 
@@ -80,13 +81,13 @@ export function virtuals(options?: any): PropertyDecorator;
 export function virtuals(target: any, propertyKey: string, descriptor?: PropertyDescriptor): void;
 export function virtuals(target: any, propertyKey?: string, descriptor?: PropertyDescriptor): PropertyDecorator | void {
   if (descriptor && (descriptor.get || descriptor.set)) {
-    getMetadata(target.constructor).virtuals.push([propertyKey, descriptor]);
+    getMetadata(target.constructor).virtuals[propertyKey] = descriptor;
   } else {
     // for virtual reference
     const options = target;
     // tslint:disable-next-line:no-shadowed-variable
     return (target: any, propertyKey: string): void => {
-      getMetadata(target.constructor).virtuals.push([propertyKey, { value: options }]);
+      getMetadata(target.constructor).virtuals[propertyKey] = { value: options };
     };
   }
 }
@@ -134,13 +135,14 @@ function makeFieldDecorator(defaults?: any) {
  * @param options
  */
 function mergeOptions(defaults: any, options?: any): Mongoose.SchemaTypeOpts<any> {
-  let opts = Array.isArray(options) ? options[0] : options;
+  const isArray = Array.isArray(options);
+  let opts = isArray ? options[0] : options;
   // standardize type option
   if (typeof opts === 'function') {
-    opts = { type: opts };
+    opts = { type: normalizeType(opts) };
   }
   opts = Object.assign({}, defaults, opts);
-  return Array.isArray(options) ? [opts] : opts;
+  return isArray ? [opts] : opts;
 }
 
 /**
@@ -193,6 +195,10 @@ function normalizeType(type: any): any {
   }
   if (type === Array) {
     return [Mongoose.Schema.Types.Mixed];
+  }
+  // subdocs
+  if (hasMetadata(type)) {
+    return buildSchema(type, false);
   }
   // default type
   return Mongoose.Schema.Types.Mixed;

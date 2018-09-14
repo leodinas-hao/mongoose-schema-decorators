@@ -42,11 +42,14 @@ class Service {
 
 class NestClass {
   @field
-  public name: string;
+  public prop1: string;
+}
+
+class ParentClass {
   @field
-  public sub: {
-    prop1: string;
-  };
+  public name: string;
+  @field([NestClass])
+  public sub: [NestClass];
 }
 
 @suite('Tester')
@@ -71,15 +74,7 @@ class Tester {
 
   @test('nested schema')
   public nestedSchema() {
-    const s = new Mongoose.Schema({
-      name: String,
-      sub: {
-        prop1: String,
-      },
-    });
-    console.log(s);
-
-    const ss = buildSchema(NestClass);
+    const ss = buildSchema(ParentClass);
     console.log(ss);
   }
 
