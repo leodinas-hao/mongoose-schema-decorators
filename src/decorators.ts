@@ -181,6 +181,7 @@ function setFieldOptions(target: any, propertyKey: string, options?: any): void 
 function normalizeType(type: any): any {
   const acceptableTypes = [
     Boolean,
+    Date,
     Number,
     String,
   ];

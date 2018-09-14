@@ -28,31 +28,42 @@ npm install mongoose-schema-decorators --save
 
 ## Sample usage
 ```js
-interface Customer {
-  _id: number;
-  name: string;
-  createdDate: Date;
+@schema({
+  toJSON: {
+    getters: true,
+    virtuals: true,
+  },
+})
+class Service {
+  @indexed
+  @field(Mongoose.Schema.Types.ObjectId)
+  _id: Mongoose.Schema.Types.ObjectId;
 
-  readonly services: Service[];
-  readonly myGetter: string;
+  @field
+  product: string;
+
+  @field
+  description: string;
+
+  @field({ ref: 'Customer' })
+  customer: number;
 }
 
-type CustomerDocument = Customer & Mongoose.Document;
+const serviceSchema: Mongoose.Schema = buildSchema(Service);
 
 @schema({
   toJSON: {
     getters: true,
-    virtuals: true
-  }
+    virtuals: true,
+  },
 })
-class CustomerClass extends Mongoose.Model implements Customer {
+class Customer {
   @indexed
   @unique
   _id: number;
 
   @field
   @indexed
-  @unique
   name: string;
 
   @field(Date)
@@ -62,21 +73,16 @@ class CustomerClass extends Mongoose.Model implements Customer {
     ref: 'Service',
     localField: '_id',
     foreignField: 'customer',
-    justOne: false
+    justOne: false,
   })
-  services: Service[];
+  public services: Service[];
 
-  static Search(term: string): Promise<CustomerDocument[]> {
-    let reg = new RegExp(term, 'i');
-    return this.find({ name: reg }).exec();
-  }
-
-  get myGetter(): string {
-    return 'sample getter';
+  get getRef(): string {
+    return `${this._id}-${this.name}`;
   }
 }
 
-const CustomerSchema: Mongoose.Schema = buildSchema(CustomerClass);
+const CustomerSchema: Mongoose.Schema = buildSchema(Customer);
 ```
 
 ## License
