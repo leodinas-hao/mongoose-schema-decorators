@@ -29,6 +29,8 @@ class Service {
 }
 
 const serviceSchema: Mongoose.Schema = buildSchema(Service);
+type ServiceDocument = Service & Mongoose.Document;
+const ServiceModel = Mongoose.model<ServiceDocument, Mongoose.Model<ServiceDocument>>('Service', serviceSchema);
 
 @schema({
   toJSON: {
@@ -62,3 +64,19 @@ class Customer {
 }
 
 const CustomerSchema: Mongoose.Schema = buildSchema(Customer);
+type CustomerDocument = Customer & Mongoose.Document;
+const CustomerModel = Mongoose.model<CustomerDocument, Mongoose.Model<CustomerDocument>>('Customer', CustomerSchema);
+
+const customer1 = new CustomerModel({
+  _id: 1,
+  name: 'customer one',
+  createdDate: Date.now(),
+});
+customer1.save();
+
+const service1 = new ServiceModel({
+  product: 'S1',
+  description: 'service one',
+  customer: 1,
+} as Service);
+service1.save();
