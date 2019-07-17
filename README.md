@@ -49,9 +49,20 @@ class Service {
   customer: number;
 }
 
-const serviceSchema: Mongoose.Schema = buildSchema(Service);
-type ServiceDocument = Service & Mongoose.Document;
-const ServiceModel = Mongoose.model<ServiceDocument, Mongoose.Model<ServiceDocument>>('Service', serviceSchema);
+@schema({ _id: false })
+class Contact {
+  @field
+  public firstname: string;
+
+  @field
+  public lastname: string;
+
+  @field
+  public phone: string;
+
+  @field
+  public address: string;
+}
 
 @schema({
   toJSON: {
@@ -71,6 +82,9 @@ class Customer {
   @field(Date)
   createdDate: Date;
 
+  @field([Contact])
+  contacts: [Contact];
+
   @virtuals({
     ref: 'Service',
     localField: '_id',
@@ -83,6 +97,10 @@ class Customer {
     return `${this._id}-${this.name}`;
   }
 }
+
+const serviceSchema: Mongoose.Schema = buildSchema(Service);
+type ServiceDocument = Service & Mongoose.Document;
+const ServiceModel = Mongoose.model<ServiceDocument, Mongoose.Model<ServiceDocument>>('Service', serviceSchema);
 
 const CustomerSchema: Mongoose.Schema = buildSchema(Customer);
 type CustomerDocument = Customer & Mongoose.Document;
