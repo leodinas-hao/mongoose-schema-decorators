@@ -1,5 +1,5 @@
+import { suite, test } from '@testdeck/mocha';
 import { assert } from 'chai';
-import { suite, test } from 'mocha-typescript';
 
 import * as Mongoose from 'mongoose';
 import {
