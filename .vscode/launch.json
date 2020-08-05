@@ -12,15 +12,10 @@
       "cwd": "${workspaceFolder}",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
-        "-u",
-        "tdd",
-        "--no-timeouts",
-        "--colors",
-        "--require",
-        "ts-node/register",
+        "--config",
+        ".mocha.yml",
         "${workspaceRoot}/src/**/*.spec.ts"
       ],
-      "internalConsoleOptions": "openOnSessionStart",
       "console": "integratedTerminal"
     }
   ]
