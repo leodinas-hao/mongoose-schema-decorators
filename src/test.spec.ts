@@ -21,7 +21,7 @@ class Service {
   @field(Mongoose.Schema.Types.ObjectId)
   public _id: Mongoose.Schema.Types.ObjectId;
 
-  @field
+  @field({ type: String })
   public product: string;
 
   @field
@@ -109,6 +109,7 @@ class Tester {
     // console.log(serviceSchema);
 
     assert.equal(4, this.pathCount(serviceSchema));
+    assert.equal('String', (serviceSchema.path('product') as any).instance);
     assert.equal('Number', (serviceSchema.path('customer') as any).instance);
     assert.equal('Customer', (serviceSchema.path('customer') as any).options['ref']);
   }

@@ -114,7 +114,7 @@ export function virtuals(target: any, propertyKey?: string, descriptor?: Propert
  * @param defaults
  */
 function makeFieldDecorator(defaults?: any) {
-  function fieldDecorator(options?: Mongoose.SchemaTypeOpts<any>): PropertyDecorator;
+  function fieldDecorator(options?: Mongoose.SchemaTypeOptions<any> | Function): PropertyDecorator;
   function fieldDecorator(target: any, propertyKey: string): void;
   function fieldDecorator(options?: any, propertyKey?: string): PropertyDecorator | void {
     if (propertyKey) {
@@ -134,7 +134,7 @@ function makeFieldDecorator(defaults?: any) {
  * @param defaults
  * @param options
  */
-function mergeOptions(defaults: any, options?: any): Mongoose.SchemaTypeOpts<any> {
+function mergeOptions(defaults: any, options?: any): Mongoose.SchemaTypeOptions<any> {
   const isArray = Array.isArray(options);
   let opts = isArray ? options[0] : options;
   // standardize type option
